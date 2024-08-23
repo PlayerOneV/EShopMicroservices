@@ -1,3 +1,5 @@
+using BuildingBlocks.Behaviors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Services to the container
@@ -5,7 +7,9 @@ builder.Services.AddCarter(new DependencyContextAssemblyCatalog(assemblies: type
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddMarten(op =>
 {
     op.Connection(builder.Configuration.GetConnectionString("Database")!);
